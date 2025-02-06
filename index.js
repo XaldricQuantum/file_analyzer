@@ -4,48 +4,45 @@ import dotenv from 'dotenv';
 import multer from 'multer';
 import path from 'path';
 
+dotenv.config(); // Load environment variables
+
 const app = express();
-dotenv.config();
 const PORT = process.env.PORT || 3000;
 
-// Configure Multer for file uploads
-const storage = multer.memoryStorage(); 
+// Configure Multer for file uploads (store in memory)
+const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-app.use(express.json())
-app.use(cors());
-app.use('/public', express.static(`${process.cwd()}/public`));
+app.use(express.json()); // Parse JSON request bodies
+app.use(cors()); // Enable CORS for cross-origin requests
+app.use('/public', express.static(`${process.cwd()}/public`)); // Serve static files
 
-app.get('/', function (req, res) {
-  res.sendFile(process.cwd() + '/views/index.html');
+// Serve the HTML file
+app.get('/', (req, res) => {
+  res.sendFile(`${process.cwd()}/views/index.html`);
 });
 
+// File upload and analysis endpoint
 app.post('/api/fileanalyse', upload.single('upfile'), (req, res) => {
   try {
+    // Check if a file was uploaded
     if (!req.file) {
-      return res.status(400).json({error: "no file uploded"})
+      return res.status(400).json({ error: "No file uploaded" });
     }
 
-    const fileBuffer = req.file.buffer;
-    const fileSize = req.file.size;
-    const fileType = req.file.mimetype;
+    // Extract file details
     res.json({
       name: req.file.originalname,
-      type: fileType,
-      size: fileSize
-    })
+      type: req.file.mimetype,
+      size: req.file.size,
+    });
   } catch (err) {
-    console.error("File processing error: ", err);
-    res.status(500).json({message: "Oops! Something went wrong."})
-    
+    console.error("File processing error:", err);
+    res.status(500).json({ message: "Oops! Something went wrong." });
   }
-  // res.json({message: "here is where the file goes!"})
-})
+});
 
-
-
-
-const port = process.env.PORT || 3000;
-app.listen(port, function () {
-  console.log('Your app is listening on port ' + port)
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Your app is listening on port ${PORT}`);
 });

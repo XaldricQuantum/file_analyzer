@@ -25,18 +25,26 @@ input {
   display: block;
   position: relative;
   margin: 10px auto;
+  width: 230px;
+  height: 20px;
 }
 
 input#button {
   width: 230px;
+  height: 30px;
+  border: 1px solid #287ab1;
+  background-color: antiquewhite;
+  border-radius: 5px;
 }
 
 .view {
   position:relative;
   margin: auto;
   margin-top: 40px;
-  border: 1px  solid  #aaa;
+  border: 1px  solid  rgb(163, 192, 203);
   padding: 20px;
   width: 60%;
   min-width: 400px;
+  border-radius: 10px;
+  background-color: rgb(152, 207, 213);
 }
